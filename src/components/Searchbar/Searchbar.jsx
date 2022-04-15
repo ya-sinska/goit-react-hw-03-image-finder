@@ -28,8 +28,8 @@ export const Searchbar = ({onSubmit}) => {
                 <InputField
                     type="text"
                     name="name"
-                    autocomplete="off"
-                    autofocus
+                    autoComplete="off"
+                    autoFocus
                     placeholder="Search images and photos"
                     />
                 <Error name="name" component="div"/>                
