@@ -1,7 +1,7 @@
 import { Formik} from 'formik';
 import * as yup from 'yup';
 import PropTypes from 'prop-types';
-import { Searchfield, SearchForm, InputField, Error, BtnSubmitForm, BtnLabel } from './Searchbar.styled'
+import { Searchfield, SearchForm, InputField, Error, BtnSubmitForm} from './Searchbar.styled'
 import { BiSearch } from 'react-icons/bi';
 const nameRegExp = /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/;
 const schema = yup.object().shape({
