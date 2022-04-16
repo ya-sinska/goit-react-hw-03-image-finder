@@ -12,7 +12,7 @@ const initialValues = {
 };
 export const Searchbar = ({onSubmit}) => {
     const handleSubmit = (values, { resetForm }) => {
-    onSubmit(values);
+    onSubmit(values.name);
     resetForm();
   };
     return (
