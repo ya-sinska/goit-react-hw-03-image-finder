@@ -1,4 +1,5 @@
 import { Component } from "react";
+import * as Scroll from 'react-scroll';
 import { Searchbar } from "../Searchbar/Searchbar";
 import { ImageGallery } from "../ImageGallery/ImageGallery"
 import {LoadMoreBtn} from "../Button/Button"
@@ -70,13 +71,11 @@ export class App extends Component {
       this.setState(prevState => ({
         page:prevState.page+1
       }))
+    Scroll.animateScroll.scrollMore(300);
     }
   searchImage = (imageName) => {
     this.setState({ imageName, page:1});
-    window.scrollTo({
-      top: '',
-      behavior: 'smooth',
-    });
+    Scroll.animateScroll.scrollToTop()
   }
   render() {
     const {status, photos, error, total} = this.state;
