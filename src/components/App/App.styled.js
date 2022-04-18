@@ -7,7 +7,5 @@ export const Container = styled.div`
   padding-bottom: 24px;
   background-color: #52ACFF;
   background-image: linear-gradient(147deg, #52ACFF 10%, #FFE32C 100%);
-
-
 ` 
 

@@ -1,4 +1,4 @@
-import {ImFinder} from 'react-icons/im';
+import PropTypes from 'prop-types';
 import { StartPage, Image } from "./StartSearch.styled"
 export const StartSearch = ({ text }) => {
     return (
@@ -7,4 +7,8 @@ export const StartSearch = ({ text }) => {
             <Image/>
         </StartPage>
     )
+}
+
+StartSearch.propTypes = {
+    text: PropTypes.string,
 }

@@ -1,47 +1,24 @@
 import { Component } from "react";
-import { fetchImages } from '../../services/api'
-import { notifi } from "../../services/notifi"
-import { ToastContainer} from 'react-toastify';
-import { Gallery } from "./ImageGallery.styled";
+import PropTypes from 'prop-types';
+import { Gallery, Container } from "./ImageGallery.styled";
 import { ImageGalleryItem } from "../ImageGalleryItem/ImageGalleryItem";
 import {StartSearch} from "../StartSearch/StartSearch"
 import { Loader } from "../Loader/Loader"
+import {Modal} from "../Modal/Modal"
 
-const Status = {
-  IDLE: 'idle',
-  PENDING: 'pending',
-  RESOLVED: 'resolved',
-  REJECTED: 'rejected',
-};
-
-export class ImageGallery extends Component { 
+export class ImageGallery extends Component {
     state = {
-    photos: null,
-    error: null,
-    status: Status.IDLE,
+        modalOpen: false,
+        modalImage:''
     };
-    componentDidUpdate(prevProps,_) {
-        const prevName = prevProps.imageName;
-        const nextName = this.props.imageName;
-        if (prevName !== nextName) {
-            this.setState({ status: Status.PENDING })
-            fetchImages(nextName)
-                .then(photos => {
-                    if (photos.total !== 0) { this.setState({ photos: photos.hits, status: Status.RESOLVED }) }
-                    else {
-                        this.setState({ status: Status.REJECTED });
-                        notifi (nextName);
-                    }
-                })
-                .catch(error => {
-                    this.setState({ error: error, status: Status.REJECTED });
-                    notifi (error.massege);
-                });
-        }
+    openModal = (data) => {
+        this.setState(prevState => ({
+            modalOpen: !prevState.modalOpen,
+            modalImage: data}))
     }
     render() {
-    const { photos, error, status } = this.state;
-    
+        const {  modalOpen, modalImage } = this.state;
+        const { photos, error, status } = this.props;
     if (status === 'idle') {
         return <StartSearch text="Let's make a choise" />;
     }
@@ -52,18 +29,27 @@ export class ImageGallery extends Component {
 
     if (status === 'resolved') {
         return (
-            <Gallery>
-                {photos.map(photo => <ImageGalleryItem key={photo.id} photo={photo} />)}
-                <button>Load more</button>
-            </Gallery>)
+            <Container>
+                <Gallery>
+                    {photos.map(photo =>
+                        <ImageGalleryItem key={photo.id}
+                            photo={photo} onImageClick={this.openModal} />
+                    )}
+                </Gallery>
+                <Modal isModalOpen={modalOpen} onClose={this.openModal} image={ modalImage}/>
+            </Container>)
 
     } 
     if (status === 'rejected') {
         return <>
-            <StartSearch text={error? (error.massege):("Sorry, try again")} />;
-            <ToastContainer />
+            <StartSearch text={error? (error.massege):("Sorry, try again")} />;       
         </>  
     }     
-}
+}}
 
+ImageGallery.propTypes = {
+    photos: PropTypes.array,
+    error: PropTypes.string,
+    status: PropTypes.string
+    
 }
