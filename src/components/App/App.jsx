@@ -27,46 +27,28 @@ export class App extends Component {
   componentDidUpdate(_, prevState) {
     const prevName = prevState.imageName;
     const nextName = this.state.imageName;
-    if (this.state.page > prevState.page) {
+    if (this.state.page !== prevState.page || prevName !== nextName) {
       this.setState({ status: Status.PENDING })
       fetchImages(nextName, this.state.page)
         .then(photos => {
-          this.setState(prevState => ({
-            photos: [...prevState.photos, ...photos.hits],
-            status: Status.RESOLVED,
-          }))
+          if (photos.hits.length > 0) {
+            this.setState(prevState => ({
+              photos: [...prevState.photos, ...photos.hits],
+              status: Status.RESOLVED,
+              total: photos.total,
+            }))
+          }
+          else {
+            this.setState({ status: Status.REJECTED });
+            notifi(`Picture ${nextName} didn't find`);
+          }
         })
         .catch(error => {
           this.setState({ error: error, status: Status.REJECTED });
           notifi(error.massege);
         });
     }
-    else{
-    
-      if (prevName !== nextName) {
-        this.setState({ status: Status.PENDING })
-        fetchImages(nextName, this.state.page)
-          .then(photos => {
-            if (photos.hits.length > 0) {
-              this.setState(prevState => ({
-                photos: [...photos.hits],
-                status: Status.RESOLVED,
-                total: photos.total,
-              }))
-            }
-            else {
-              this.setState({ status: Status.REJECTED });
-              notifi(`Picture ${nextName} didn't find`);
-            }
-          })
-          .catch(error => {
-            this.setState({ error: error, status: Status.REJECTED });
-            notifi(error.massege);
-          });
-      }
-    }
   }
-
   LoadMore = () => {
       this.setState(prevState => ({
         page:prevState.page+1
@@ -74,7 +56,7 @@ export class App extends Component {
     Scroll.animateScroll.scrollMore(300);
     }
   searchImage = (imageName) => {
-    this.setState({ imageName, page:1});
+    this.setState({ imageName, page:1, photos: []});
     Scroll.animateScroll.scrollToTop()
   }
   render() {
