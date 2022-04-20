@@ -1,12 +1,18 @@
+import axios from 'axios';
 const KEY = '25289922-76fc98c8dd80f80668ef47aa3';
-export const fetchImages = (name, page=1, limit=20) => {
-    const params = new URLSearchParams({
+export const fetchImages = async (name, page = 1, limit = 20) => {
+  try {
+  const params = {
+    key: KEY,
+    q: name,
+    image_type:"photo",
     per_page: limit,
     page: page,
-    // orientation:"horizontal" 
-  });
-    return  fetch(`https://pixabay.com/api/?key=${KEY}&q=${name}&image_type=photo&${params}`)
-    .then(r => {if (r.ok) { return r.json() }
-    return Promise.reject(new Error(`Picture ${name} didn't find`))})
-}
+    };
+    const response = await axios.get(`https://pixabay.com/api/`, { params });
+    return response.data;  
+  }  catch (error) {
+   return `Picture ${name} didn't find`;
+   }
+};
 
